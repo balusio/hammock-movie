@@ -67,6 +67,7 @@ const UserSearchComponent = () => {
       });
     }
   };
+
   return (
     <>
       <div

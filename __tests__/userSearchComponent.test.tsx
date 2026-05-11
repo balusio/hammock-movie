@@ -1,6 +1,13 @@
 import "@testing-library/jest-dom";
-import { fireEvent, getByTestId, render, screen } from "@testing-library/react";
+import {
+  fireEvent,
+  getByTestId,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import UseSearchCommponent from "../app/components/userSearchComponent";
+import { resourceLimits } from "node:worker_threads";
 
 const mockResponse = {
   page: 1,
@@ -79,5 +86,52 @@ describe("ResultComponent", () => {
     expect(deleteButton).toHaveClass(
       "button bg-red-300 text-white p-2 ml-2 hover:bg-red-500 cursor-pointer rounded-md",
     );
+  });
+
+  it("should return error if response fails", async () => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve({}),
+        ok: false,
+      }),
+    ) as jest.Mock;
+
+    render(<UseSearchCommponent />);
+
+    const containerInput = screen.getByTestId("container-input");
+    const input = screen.getByTestId("search-input");
+    expect(containerInput).toBeInTheDocument();
+    expect(input).toBeInTheDocument();
+    fireEvent.change(input, {
+      target: { value: "mock" },
+    });
+
+    const navList = await screen.findByText("Error on search, try again");
+    expect(navList).toBeInTheDocument();
+  });
+
+  it("should not show results if data is 0", async () => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () =>
+          Promise.resolve({
+            results: [],
+          }),
+        ok: false,
+      }),
+    ) as jest.Mock;
+
+    render(<UseSearchCommponent />);
+
+    const containerInput = screen.getByTestId("container-input");
+    const input = screen.getByTestId("search-input");
+    expect(containerInput).toBeInTheDocument();
+    expect(input).toBeInTheDocument();
+    fireEvent.change(input, {
+      target: { value: "mock" },
+    });
+
+    const resultNav = screen.queryByTestId("nav-data");
+    expect(resultNav).toBeNull();
   });
 });

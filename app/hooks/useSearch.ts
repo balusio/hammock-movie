@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import fetchApi from "../utils/api";
 import { API_SEARCH_RESULT } from "../utils/constants";
 import { MovieApiResponse, SearchResult } from "../utils/types";
+import { formatDate } from "../utils";
 
 /**
  * Encapsulate state into useSearch:
@@ -43,11 +44,7 @@ const useSearch = ({
           status: API_SEARCH_RESULT.FULFILLED,
           response: results.slice(0, limit).map((elem: MovieApiResponse) => ({
             title: elem.title,
-            year: new Date(elem.release_date).toLocaleString("en-US", {
-              year: "numeric",
-              month: "2-digit",
-              day: "2-digit",
-            }),
+            year: formatDate(elem.release_date),
             id: elem.id,
           })),
         });
