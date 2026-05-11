@@ -1,26 +1,11 @@
 import { JSX } from "react";
 import { API_SEARCH_RESULT } from "../utils/constants";
-import { MovieFormattedResponse, SearchResult } from "../utils/types";
+import { SearchResult } from "../utils/types";
+import SearchElementResult from "./SearchResultRowComponent";
 
 type UserSearchResultProps = SearchResult & {
   selectedIndex: number | null;
-};
-
-type SearchElementResultProps = MovieFormattedResponse & {
-  selected: boolean;
-};
-
-const SearchElementResult = ({
-  title,
-  year,
-  selected,
-}: SearchElementResultProps) => {
-  const selectedClassName = selected ? "bg-gray-200" : "";
-  return (
-    <li className={`${selectedClassName} p-4 m-2`} data-testid={title}>
-      {title} - {year.toLocaleString("en")}
-    </li>
-  );
+  onSelectedMovie: (id: number) => void;
 };
 
 const UserSearchResultComponent = (props: UserSearchResultProps) => {
@@ -40,10 +25,13 @@ const UserSearchResultComponent = (props: UserSearchResultProps) => {
                 {...movie}
                 key={movie.id}
                 selected={props.selectedIndex === idx}
+                onClick={props.onSelectedMovie}
+                currentIdx={idx}
               />
             ))}
           </ul>
         );
+
       case API_SEARCH_RESULT.REJECTED:
         return <>Error on search, try again</>;
     }

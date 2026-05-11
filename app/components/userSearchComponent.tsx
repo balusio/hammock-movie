@@ -1,6 +1,12 @@
 "use client";
 
-import { SyntheticEvent, useEffect, useState } from "react";
+import {
+  KeyboardEvent,
+  KeyboardEventHandler,
+  SyntheticEvent,
+  useEffect,
+  useState,
+} from "react";
 import { API_SEARCH_RESULT, useSearch } from "../hooks/useSearch";
 import UserSearchResultComponent from "./userSearchResultComponent";
 
@@ -27,12 +33,37 @@ const UserSearchComponent = () => {
     }
   }, [value]);
 
-  const onResetClicked = (e: SyntheticEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const onReset = () => {
     resetResult();
     setValue("");
     setMovieSelected(false);
     setSelectedIndex(null);
+  };
+
+  const onResetClicked = () => {
+    onReset();
+  };
+
+  const onResetPressed = (e: KeyboardEvent) => {
+    const arrowEvent = (e as unknown as KeyboardEvent).code;
+    if (arrowEvent === "Enter") {
+      onReset();
+    }
+  };
+
+  /**
+   * @param idx  if the event is mouse based it will select the index based clicked otherwise is keyboardBased
+   * uses the current index moved on the results
+   */
+  const onMovieSelected = (idx?: number) => {
+    setMovieSelected(true);
+    if (result.status === API_SEARCH_RESULT.FULFILLED) {
+      if (idx !== undefined) {
+        setValue(result.response[idx].title);
+      } else if (selectedIndex !== null) {
+        setValue(result.response[selectedIndex].title);
+      }
+    }
   };
 
   // usage of https://stackoverflow.com/questions/42036865/react-how-to-navigate-through-list-by-arrow-keys
@@ -42,13 +73,7 @@ const UserSearchComponent = () => {
     const backward = arrowEvent === "ArrowUp" || arrowEvent === "ArrowLeft";
 
     if (arrowEvent === "Enter") {
-      setMovieSelected(true);
-      if (
-        result.status === API_SEARCH_RESULT.FULFILLED &&
-        selectedIndex !== null
-      ) {
-        setValue(result.response[selectedIndex].title);
-      }
+      onMovieSelected();
     }
 
     if (forward || backward) {
@@ -82,19 +107,25 @@ const UserSearchComponent = () => {
           value={value}
           onChange={onInputChange}
           className="border-2 rounded-md w-full px-6 h-12"
+          disabled={movieSelected}
         />
         {movieSelected ? (
           <button
             tabIndex={0}
             data-testid="reset-button"
-            className="button bg-red-300 text-white p-2 ml-2 hover:bg-red-500 cursor-pointer rounded-md"
+            className="button text-white p-2 ml-2 bg-red-500 cursor-pointer rounded-md"
             onClick={onResetClicked}
+            onKeyDown={onResetPressed}
           >
             clear
           </button>
         ) : null}
       </div>
-      <UserSearchResultComponent {...result} selectedIndex={selectedIndex} />
+      <UserSearchResultComponent
+        {...result}
+        selectedIndex={selectedIndex}
+        onSelectedMovie={onMovieSelected}
+      />
     </>
   );
 };

@@ -28,6 +28,7 @@ const mockResponse = {
     },
   ],
 };
+
 describe("ResultComponent", () => {
   beforeEach(() => {
     global.fetch = jest.fn(() =>
@@ -84,7 +85,7 @@ describe("ResultComponent", () => {
     expect(deleteButton).toBeInTheDocument();
 
     expect(deleteButton).toHaveClass(
-      "button bg-red-300 text-white p-2 ml-2 hover:bg-red-500 cursor-pointer rounded-md",
+      "button text-white p-2 ml-2 bg-red-500 cursor-pointer rounded-md",
     );
   });
 
