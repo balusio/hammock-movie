@@ -52,7 +52,7 @@ const UserSearchComponent = () => {
   };
 
   /**
-   * @param idx if the event is mouse based it will select the index based clicked otherwise is keyboardBased
+   * @param idx  if the event is mouse based it will select the index based clicked otherwise is keyboardBased
    * uses the current index moved on the results
    */
   const onMovieSelected = (idx?: number) => {
@@ -63,8 +63,6 @@ const UserSearchComponent = () => {
       } else if (selectedIndex !== null) {
         setValue(result.response[selectedIndex].title);
       }
-
-      setSelectedIndex(null);
     }
   };
 
@@ -95,11 +93,13 @@ const UserSearchComponent = () => {
           </button>
         ) : null}
       </div>
-      <UserSearchResultComponent
-        {...result}
-        selectedIndex={selectedIndex}
-        onSelectedMovie={onMovieSelected}
-      />
+      <div>
+        <UserSearchResultComponent
+          {...result}
+          selectedIndex={selectedIndex}
+          onSelectedMovie={onMovieSelected}
+        />
+      </div>
     </>
   );
 };
