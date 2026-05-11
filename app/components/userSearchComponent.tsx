@@ -56,8 +56,8 @@ const UserSearchComponent = () => {
    * uses the current index moved on the results
    */
   const onMovieSelected = (idx?: number) => {
-    setMovieSelected(true);
     if (result.status === API_SEARCH_RESULT.FULFILLED) {
+      setMovieSelected(true);
       if (idx !== undefined) {
         setValue(result.response[idx].title);
       } else if (selectedIndex !== null) {
@@ -96,7 +96,7 @@ const UserSearchComponent = () => {
   return (
     <>
       <div
-        className="flex flex-row my-2 w-full"
+        className="flex flex-row my-2 w-full relative"
         data-testid="container-input"
         onKeyDown={(e) => onKeyDownEvent(e as unknown as KeyboardEvent)}
       >
@@ -106,14 +106,14 @@ const UserSearchComponent = () => {
           placeholder="search movie"
           value={value}
           onChange={onInputChange}
-          className="border-2 rounded-md w-full px-6 h-12"
+          className="border-2 rounded-md w-full pl-6 h-12 pr-16"
           disabled={movieSelected}
         />
         {movieSelected ? (
           <button
             tabIndex={0}
             data-testid="reset-button"
-            className="button text-white p-2 ml-2 bg-red-500 cursor-pointer rounded-md"
+            className="button text-white p-2 ml-2 bg-red-500 cursor-pointer rounded-r-md absolute right-0  h-12 w-16"
             onClick={onResetClicked}
             onKeyDown={onResetPressed}
           >

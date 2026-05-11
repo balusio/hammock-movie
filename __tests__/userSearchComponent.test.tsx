@@ -84,9 +84,7 @@ describe("ResultComponent", () => {
     const deleteButton = await screen.findByTestId("reset-button");
     expect(deleteButton).toBeInTheDocument();
 
-    expect(deleteButton).toHaveClass(
-      "button text-white p-2 ml-2 bg-red-500 cursor-pointer rounded-md",
-    );
+    expect(deleteButton).toHaveTextContent("clear");
   });
 
   it("should return error if response fails", async () => {
