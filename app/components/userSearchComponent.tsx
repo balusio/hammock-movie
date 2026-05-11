@@ -52,7 +52,7 @@ const UserSearchComponent = () => {
   };
 
   /**
-   * @param idx  if the event is mouse based it will select the index based clicked otherwise is keyboardBased
+   * @param idx if the event is mouse based it will select the index based clicked otherwise is keyboardBased
    * uses the current index moved on the results
    */
   const onMovieSelected = (idx?: number) => {
@@ -63,33 +63,8 @@ const UserSearchComponent = () => {
       } else if (selectedIndex !== null) {
         setValue(result.response[selectedIndex].title);
       }
-    }
-  };
 
-  // usage of https://stackoverflow.com/questions/42036865/react-how-to-navigate-through-list-by-arrow-keys
-  const onKeyDownEvent = (e: KeyboardEvent) => {
-    const arrowEvent = (e as unknown as KeyboardEvent).code;
-    const forward = arrowEvent === "ArrowDown" || arrowEvent === "ArrowRight";
-    const backward = arrowEvent === "ArrowUp" || arrowEvent === "ArrowLeft";
-
-    if (arrowEvent === "Enter") {
-      onMovieSelected();
-    }
-
-    if (forward || backward) {
-      setSelectedIndex((oldValue) => {
-        if (oldValue !== null) {
-          // TOD: i know there's a minmax here
-          const resetForward =
-            forward && oldValue + 1 > API_RESULT_LIMIT - 1 ? 0 : oldValue + 1;
-          const resetBackward =
-            backward && oldValue - 1 < 0 ? API_RESULT_LIMIT - 1 : oldValue - 1;
-
-          return forward ? resetForward : resetBackward;
-        } else {
-          return 0;
-        }
-      });
+      setSelectedIndex(null);
     }
   };
 
@@ -98,7 +73,6 @@ const UserSearchComponent = () => {
       <div
         className="flex flex-row my-2 w-full relative"
         data-testid="container-input"
-        onKeyDown={(e) => onKeyDownEvent(e as unknown as KeyboardEvent)}
       >
         <input
           type="text"

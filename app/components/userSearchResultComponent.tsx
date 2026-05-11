@@ -24,7 +24,6 @@ const UserSearchResultComponent = (props: UserSearchResultProps) => {
               <SearchElementResult
                 {...movie}
                 key={movie.id}
-                selected={props.selectedIndex === idx}
                 onClick={props.onSelectedMovie}
                 currentIdx={idx}
               />

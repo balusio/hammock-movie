@@ -73,13 +73,13 @@ describe("ResultComponent", () => {
     const navList = await screen.findByTestId("nav-data");
     expect(navList).toBeInTheDocument();
 
-    fireEvent.keyDown(containerInput, { key: "ArrowDown", code: "ArrowDown" });
     const firstResult = await screen.findByTestId(
       mockResponse.results[0].title,
     );
     expect(firstResult).toBeInTheDocument();
-    expect(firstResult).toHaveClass("bg-gray-200 p-4 m-2");
-    fireEvent.keyDown(containerInput, { key: "Enter", code: "Enter" });
+    expect(firstResult).toHaveClass("p-4 m-2 cursor-pointer hover:bg-gray-200");
+    fireEvent.focus(firstResult);
+    fireEvent.keyDown(firstResult, { key: "Enter", code: "Enter" });
 
     const deleteButton = await screen.findByTestId("reset-button");
     expect(deleteButton).toBeInTheDocument();

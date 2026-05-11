@@ -1,7 +1,7 @@
+import { useEffect, useState } from "react";
 import { MovieFormattedResponse } from "../utils/types";
 
 type SearchElementResultProps = MovieFormattedResponse & {
-  selected: boolean;
   onClick: (idx: number) => void;
   currentIdx: number;
 };
@@ -9,14 +9,20 @@ type SearchElementResultProps = MovieFormattedResponse & {
 const SearchElementResult = ({
   title,
   year,
-  selected,
   onClick,
   currentIdx,
 }: SearchElementResultProps) => {
-  const selectedClassName = selected ? "bg-gray-200" : "";
+  const [focused, setIsFocused] = useState(false);
+  const selectedClassName = focused ? "bg-gray-200" : "";
 
   const onMovieSelected = () => {
     onClick(currentIdx);
+  };
+
+  const onKeyPressed = (e: KeyboardEvent) => {
+    if (focused && e.code === "Enter") {
+      onClick(currentIdx);
+    }
   };
 
   return (
@@ -24,6 +30,11 @@ const SearchElementResult = ({
       className={`${selectedClassName} p-4 m-2 cursor-pointer hover:bg-gray-200`}
       onClick={onMovieSelected}
       data-testid={title}
+      id={`nav-${currentIdx}`}
+      tabIndex={0}
+      onFocus={() => setIsFocused(true)}
+      onBlur={() => setIsFocused(false)}
+      onKeyDown={(e) => onKeyPressed(e as unknown as KeyboardEvent)}
     >
       {title} - {year.toLocaleString("en")}
     </li>
