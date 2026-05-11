@@ -3,13 +3,13 @@ import { API_SEARCH_RESULT } from "../utils/constants";
 import { MovieFormattedResponse, SearchResult } from "../utils/types";
 
 type UserSearchResultProps = SearchResult & {
-  onMovieSelected: (movie: string) => void;
   selectedIndex: number | null;
 };
 
 type SearchElementResultProps = MovieFormattedResponse & {
   selected: boolean;
 };
+
 const SearchElementResult = ({
   title,
   year,
@@ -17,14 +17,13 @@ const SearchElementResult = ({
 }: SearchElementResultProps) => {
   const selectedClassName = selected ? "bg-gray-200" : "";
   return (
-    <li className={`${selectedClassName} p-4 m-2`}>
+    <li className={`${selectedClassName} p-4 m-2`} data-testid={title}>
       {title} - {year.toLocaleString("en")}
     </li>
   );
 };
 
-const UserSearchResult = (props: UserSearchResultProps) => {
-  console.log(props.selectedIndex, "selected index change");
+const UserSearchResultComponent = (props: UserSearchResultProps) => {
   const ResponseData = (): JSX.Element | null => {
     switch (props.status) {
       case API_SEARCH_RESULT.IDLE:
@@ -35,7 +34,7 @@ const UserSearchResult = (props: UserSearchResultProps) => {
 
       case API_SEARCH_RESULT.FULFILLED:
         return (
-          <ul>
+          <ul data-testid="nav-data">
             {props.response.map((movie, idx) => (
               <SearchElementResult
                 {...movie}
@@ -56,4 +55,4 @@ const UserSearchResult = (props: UserSearchResultProps) => {
   );
 };
 
-export default UserSearchResult;
+export default UserSearchResultComponent;

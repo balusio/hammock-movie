@@ -2,7 +2,7 @@
 
 import { SyntheticEvent, useEffect, useState } from "react";
 import { API_SEARCH_RESULT, useSearch } from "../hooks/useSearch";
-import UserSearchResult from "./userSearchResult";
+import UserSearchResultComponent from "./userSearchResultComponent";
 
 const API_RESULT_LIMIT = 5;
 
@@ -71,10 +71,12 @@ const UserSearchComponent = () => {
     <>
       <div
         className="flex flex-row my-2 w-full"
+        data-testid="container-input"
         onKeyDown={(e) => onKeyDownEvent(e as unknown as KeyboardEvent)}
       >
         <input
           type="text"
+          data-testid="search-input"
           placeholder="search movie"
           value={value}
           onChange={onInputChange}
@@ -83,6 +85,7 @@ const UserSearchComponent = () => {
         {movieSelected ? (
           <button
             tabIndex={0}
+            data-testid="reset-button"
             className="button bg-red-300 text-white p-2 ml-2 hover:bg-red-500 cursor-pointer rounded-md"
             onClick={onResetClicked}
           >
@@ -90,11 +93,7 @@ const UserSearchComponent = () => {
           </button>
         ) : null}
       </div>
-      <UserSearchResult
-        {...result}
-        onMovieSelected={(movie) => setMovieSelected(true)}
-        selectedIndex={selectedIndex}
-      />
+      <UserSearchResultComponent {...result} selectedIndex={selectedIndex} />
     </>
   );
 };

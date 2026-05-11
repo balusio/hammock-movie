@@ -1,0 +1,83 @@
+import "@testing-library/jest-dom";
+import { fireEvent, getByTestId, render, screen } from "@testing-library/react";
+import UseSearchCommponent from "../app/components/userSearchComponent";
+
+const mockResponse = {
+  page: 1,
+  results: [
+    {
+      id: 129933,
+      title: "Paraguayan Hammock",
+      original_language: "es",
+      original_title: "Hamaca paraguaya",
+      release_date: "2006-11-02",
+    },
+    {
+      id: 195714,
+      title: "Love in a Hammock",
+      original_language: "en",
+      original_title: "Love in a Hammock",
+      release_date: "1901-01-12",
+    },
+  ],
+};
+describe("ResultComponent", () => {
+  beforeEach(() => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve(mockResponse),
+        ok: true,
+      }),
+    ) as jest.Mock;
+  });
+
+  it("renders the input component", () => {
+    render(<UseSearchCommponent />);
+    const input = screen.getByTestId("search-input");
+    expect(input).toBeInTheDocument();
+  });
+
+  it("loads the input value and renders list of result", async () => {
+    render(<UseSearchCommponent />);
+
+    const input = screen.getByTestId("search-input");
+
+    fireEvent.change(input, {
+      target: { value: "mock" },
+    });
+    expect(input).toBeInTheDocument();
+
+    const navList = await screen.findByTestId("nav-data");
+    expect(navList).toBeInTheDocument();
+  });
+
+  it("tab a result and select first movie", async () => {
+    render(<UseSearchCommponent />);
+
+    const containerInput = screen.getByTestId("container-input");
+    const input = screen.getByTestId("search-input");
+    expect(containerInput).toBeInTheDocument();
+    expect(input).toBeInTheDocument();
+    fireEvent.change(input, {
+      target: { value: "mock" },
+    });
+
+    const navList = await screen.findByTestId("nav-data");
+    expect(navList).toBeInTheDocument();
+
+    fireEvent.keyDown(containerInput, { key: "ArrowDown", code: "ArrowDown" });
+    const firstResult = await screen.findByTestId(
+      mockResponse.results[0].title,
+    );
+    expect(firstResult).toBeInTheDocument();
+    expect(firstResult).toHaveClass("bg-gray-200 p-4 m-2");
+    fireEvent.keyDown(containerInput, { key: "Enter", code: "Enter" });
+
+    const deleteButton = await screen.findByTestId("reset-button");
+    expect(deleteButton).toBeInTheDocument();
+
+    expect(deleteButton).toHaveClass(
+      "button bg-red-300 text-white p-2 ml-2 hover:bg-red-500 cursor-pointer rounded-md",
+    );
+  });
+});
