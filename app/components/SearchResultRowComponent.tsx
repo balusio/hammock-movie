@@ -24,8 +24,9 @@ const SearchElementResult = ({
       className={`${selectedClassName} p-4 m-2 cursor-pointer hover:bg-gray-200`}
       onClick={onMovieSelected}
       data-testid={title}
+      tabIndex={0}
     >
-      {title} - {year.toLocaleString("en")}
+      {title} - {year}
     </li>
   );
 };

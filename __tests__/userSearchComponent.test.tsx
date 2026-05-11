@@ -8,6 +8,7 @@ import {
 } from "@testing-library/react";
 import UseSearchCommponent from "../app/components/userSearchComponent";
 import { resourceLimits } from "node:worker_threads";
+import { formatDate } from "@/app/utils";
 
 const mockResponse = {
   page: 1,
@@ -73,13 +74,19 @@ describe("ResultComponent", () => {
     const navList = await screen.findByTestId("nav-data");
     expect(navList).toBeInTheDocument();
 
-    fireEvent.keyDown(containerInput, { key: "ArrowDown", code: "ArrowDown" });
+    await fireEvent.focus(navList);
+
     const firstResult = await screen.findByTestId(
       mockResponse.results[0].title,
     );
     expect(firstResult).toBeInTheDocument();
-    expect(firstResult).toHaveClass("bg-gray-200 p-4 m-2");
-    fireEvent.keyDown(containerInput, { key: "Enter", code: "Enter" });
+    expect(firstResult).toHaveTextContent(
+      `${mockResponse.results[0].title} - ${formatDate(mockResponse.results[0].release_date)}`,
+    );
+
+    await fireEvent.keyDown(navList, { key: "ArrowDown", code: "ArrowDown" });
+
+    await fireEvent.keyDown(navList, { key: "Enter", code: "Enter" });
 
     const deleteButton = await screen.findByTestId("reset-button");
     expect(deleteButton).toBeInTheDocument();
@@ -130,7 +137,8 @@ describe("ResultComponent", () => {
       target: { value: "mock" },
     });
 
-    const resultNav = screen.queryByTestId("nav-data");
-    expect(resultNav).toBeNull();
+    const firstResult = screen.queryByTestId(mockResponse.results[0].title);
+
+    expect(firstResult).toBeNull();
   });
 });

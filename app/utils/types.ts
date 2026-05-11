@@ -12,7 +12,7 @@ type MovieApiResponse = {
 type MovieFormattedResponse = Pick<
   MovieApiResponse,
   "title" | "id" | "release_date"
-> & { year: Date };
+> & { year: string };
 
 type SearchResult =
   | {

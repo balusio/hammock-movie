@@ -19,7 +19,7 @@ const UserSearchResultComponent = (props: UserSearchResultProps) => {
 
       case API_SEARCH_RESULT.FULFILLED:
         return (
-          <ul data-testid="nav-data">
+          <>
             {props.response.map((movie, idx) => (
               <SearchElementResult
                 {...movie}
@@ -29,7 +29,7 @@ const UserSearchResultComponent = (props: UserSearchResultProps) => {
                 currentIdx={idx}
               />
             ))}
-          </ul>
+          </>
         );
 
       case API_SEARCH_RESULT.REJECTED:

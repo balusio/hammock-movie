@@ -68,12 +68,17 @@ const UserSearchComponent = () => {
 
   // usage of https://stackoverflow.com/questions/42036865/react-how-to-navigate-through-list-by-arrow-keys
   const onKeyDownEvent = (e: KeyboardEvent) => {
+    e.preventDefault();
     const arrowEvent = (e as unknown as KeyboardEvent).code;
-    const forward = arrowEvent === "ArrowDown" || arrowEvent === "ArrowRight";
+    const forward =
+      arrowEvent === "ArrowDown" ||
+      arrowEvent === "ArrowRight" ||
+      arrowEvent === "Tab";
     const backward = arrowEvent === "ArrowUp" || arrowEvent === "ArrowLeft";
 
     if (arrowEvent === "Enter") {
       onMovieSelected();
+      document.getElementById("search-input")?.focus();
     }
 
     if (forward || backward) {
@@ -98,9 +103,9 @@ const UserSearchComponent = () => {
       <div
         className="flex flex-row my-2 w-full relative"
         data-testid="container-input"
-        onKeyDown={(e) => onKeyDownEvent(e as unknown as KeyboardEvent)}
       >
         <input
+          id="search-input"
           type="text"
           data-testid="search-input"
           placeholder="search movie"
@@ -121,11 +126,17 @@ const UserSearchComponent = () => {
           </button>
         ) : null}
       </div>
-      <UserSearchResultComponent
-        {...result}
-        selectedIndex={selectedIndex}
-        onSelectedMovie={onMovieSelected}
-      />
+      <ul
+        data-testid="nav-data"
+        tabIndex={0}
+        onKeyDown={(e) => onKeyDownEvent(e as unknown as KeyboardEvent)}
+      >
+        <UserSearchResultComponent
+          {...result}
+          selectedIndex={selectedIndex}
+          onSelectedMovie={onMovieSelected}
+        />
+      </ul>
     </>
   );
 };
